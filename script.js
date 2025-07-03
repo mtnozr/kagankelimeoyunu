@@ -112,6 +112,7 @@ let currentWordIndex = 0;
 let isFlipped = false;
 let knownWordsCount = 0;
 let unknownWordsCount = 0;
+let cardAnswered = false; // Yeni durum değişkeni
 
 // DOM elementleri
 const flashcard = document.getElementById("flashcard");
@@ -183,24 +184,28 @@ function updateCard() {
     progressFill.style.width = progress + "%";
     
     // Buton durumlarını güncelle
-    prevBtn.disabled = currentWordIndex === 0;
-    nextBtn.disabled = currentWordIndex === words.length - 1;
-    
+    prevBtn.disabled = currentWordIndex === 0 || !cardAnswered;
+    nextBtn.disabled = currentWordIndex === words.length - 1 || !cardAnswered;
+    shuffleBtn.disabled = !cardAnswered; // Shuffle butonu da cevaplanana kadar pasif
+    knownBtn.disabled = !isFlipped; // Sadece kart çevriliyse aktif
+    unknownBtn.disabled = !isFlipped; // Sadece kart çevriliyse aktif
+
     // Kartı ön yüze çevir
     if (isFlipped) {
         flashcard.classList.remove("flipped");
         isFlipped = false;
     }
+    cardAnswered = false; // Yeni karta geçildiğinde sıfırla
 }
 
 // Kartı çevir
 function flipCard() {
-    flashcard.classList.toggle("flipped");
-    isFlipped = !isFlipped;
-    playFlipSound();
-    
-    // Eğer kart çevrilmişse (Türkçe taraf görünüyorsa) başarı efektleri göster
-    if (isFlipped) {
+    if (!isFlipped) { // Sadece ön yüzdeyken çevirmeye izin ver
+        flashcard.classList.add("flipped");
+        isFlipped = true;
+        playFlipSound();
+        knownBtn.disabled = false;
+        unknownBtn.disabled = false;
         setTimeout(() => {
             showStars();
             if (Math.random() < 0.3) { // %30 şansla konfeti göster
@@ -208,12 +213,17 @@ function flipCard() {
                 playSuccessSound();
             }
         }, 400);
+    } else { // Zaten çevrilmişse, tekrar tıklayınca ön yüze dönsün
+        flashcard.classList.remove("flipped");
+        isFlipped = false;
+        knownBtn.disabled = true;
+        unknownBtn.disabled = true;
     }
 }
 
 // Önceki kart
 function previousCard() {
-    if (currentWordIndex > 0) {
+    if (currentWordIndex > 0 && cardAnswered) {
         currentWordIndex--;
         updateCard();
     }
@@ -221,7 +231,7 @@ function previousCard() {
 
 // Sonraki kart
 function nextCard() {
-    if (currentWordIndex < words.length - 1) {
+    if (currentWordIndex < words.length - 1 && cardAnswered) {
         currentWordIndex++;
         updateCard();
     }
@@ -229,21 +239,26 @@ function nextCard() {
 
 // Kartları karıştır
 function shuffleCards() {
-    for (let i = words.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [words[i], words[j]] = [words[j], words[i]];
+    if (cardAnswered || currentWordIndex === 0) { // İlk kartta veya cevaplanmışsa karıştırmaya izin ver
+        for (let i = words.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [words[i], words[j]] = [words[j], words[i]];
+        }
+        currentWordIndex = 0;
+        updateCard();
+        showConfetti();
+        playSuccessSound();
     }
-    currentWordIndex = 0;
-    updateCard();
-    showConfetti();
-    playSuccessSound();
 }
 
 // Kelimeyi biliyorum
 function markAsKnown() {
-    if (!words[currentWordIndex].known) {
-        words[currentWordIndex].known = true;
-        knownWordsCount++;
+    if (isFlipped) { // Sadece kart çevriliyse işaretlemeye izin ver
+        if (!words[currentWordIndex].known) {
+            words[currentWordIndex].known = true;
+            knownWordsCount++;
+        }
+        cardAnswered = true; // Kart cevaplandı
         updateCard();
         nextCard(); // Sonraki karta geç
     }
@@ -251,9 +266,12 @@ function markAsKnown() {
 
 // Kelimeyi bilmiyorum
 function markAsUnknown() {
-    if (!words[currentWordIndex].unknown) {
-        words[currentWordIndex].unknown = true;
-        unknownWordsCount++;
+    if (isFlipped) { // Sadece kart çevriliyse işaretlemeye izin ver
+        if (!words[currentWordIndex].unknown) {
+            words[currentWordIndex].unknown = true;
+            unknownWordsCount++;
+        }
+        cardAnswered = true; // Kart cevaplandı
         updateCard();
         nextCard(); // Sonraki karta geç
     }
