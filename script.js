@@ -260,7 +260,7 @@ function markAsKnown() {
         }
         cardAnswered = true; // Kart cevaplandı
         updateCard();
-        nextCard(); // Sonraki karta geç
+        // nextCard(); // Sonraki karta geçişi buradan kaldırıyoruz
     }
 }
 
@@ -273,7 +273,7 @@ function markAsUnknown() {
         }
         cardAnswered = true; // Kart cevaplandı
         updateCard();
-        nextCard(); // Sonraki karta geç
+        // nextCard(); // Sonraki karta geçişi buradan kaldırıyoruz
     }
 }
 
@@ -322,8 +322,8 @@ flashcard.addEventListener("click", flipCard);
 prevBtn.addEventListener("click", previousCard);
 nextBtn.addEventListener("click", nextCard);
 shuffleBtn.addEventListener("click", shuffleCards);
-knownBtn.addEventListener("click", markAsKnown);
-unknownBtn.addEventListener("click", markAsUnknown);
+knownBtn.addEventListener("click", () => { markAsKnown(); nextCard(); }); // nextCard'ı buraya ekledim
+unknownBtn.addEventListener("click", () => { markAsUnknown(); nextCard(); }); // nextCard'ı buraya ekledim
 
 // Klavye kontrolleri
 document.addEventListener("keydown", (e) => {
@@ -346,10 +346,12 @@ document.addEventListener("keydown", (e) => {
         case "k": // 'k' for known
         case "K":
             markAsKnown();
+            nextCard(); // Klavye kısayolu ile de sonraki karta geç
             break;
         case "u": // 'u' for unknown
         case "U":
             markAsUnknown();
+            nextCard(); // Klavye kısayolu ile de sonraki karta geç
             break;
     }
 });
