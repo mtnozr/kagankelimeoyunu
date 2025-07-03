@@ -54,28 +54,18 @@
             </div>
 
             <div class="controls">
-                <button class="btn btn-secondary" id="prev-btn">
-                    <span class="btn-icon">⬅️</span>
-                    Önceki
-                </button>
-                
                 <button class="btn btn-primary" id="shuffle-btn">
                     <span class="btn-icon">🔀</span>
                     Karıştır
                 </button>
-                
-                <button class="btn btn-secondary" id="next-btn">
-                    Sonraki
-                    <span class="btn-icon">➡️</span>
-                </button>
             </div>
 
             <div class="feedback-buttons">
-                <button class="btn btn-success" id="known-btn">
+                <button class="btn btn-success" id="known-btn" disabled>
                     <span class="btn-icon">✅</span>
                     Kelimeyi Biliyorum
                 </button>
-                <button class="btn btn-danger" id="unknown-btn">
+                <button class="btn btn-danger" id="unknown-btn" disabled>
                     <span class="btn-icon">❌</span>
                     Kelimeyi Bilmiyorum
                 </button>
@@ -91,13 +81,9 @@
         </footer>
     </div>
 
-    <!-- Confetti Animation -->
     <div class="confetti-container" id="confetti-container"></div>
-
-    <!-- Success Stars -->
     <div class="stars-container" id="stars-container"></div>
 
     <script src="script.js"></script>
 </body>
 </html>
-
