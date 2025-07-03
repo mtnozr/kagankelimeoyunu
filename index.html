@@ -20,8 +20,16 @@
     <div class="container">
         <header>
             <h1 class="title">Kağan'ın Almanca Kart Oyunu</h1>
-            <div class="card-counter">
-                <span id="current-card">1</span> / <span id="total-cards">100</span>
+            <div class="counters-container">
+                <div class="counter known-words">
+                    Bilinen Kelimeler: <span id="known-count">0</span>
+                </div>
+                <div class="card-counter">
+                    <span id="current-card">1</span> / <span id="total-cards">100</span>
+                </div>
+                <div class="counter unknown-words">
+                    Bilinmeyen Kelimeler: <span id="unknown-count">0</span>
+                </div>
             </div>
         </header>
 
@@ -59,6 +67,17 @@
                 <button class="btn btn-secondary" id="next-btn">
                     Sonraki
                     <span class="btn-icon">➡️</span>
+                </button>
+            </div>
+
+            <div class="feedback-buttons">
+                <button class="btn btn-success" id="known-btn">
+                    <span class="btn-icon">✅</span>
+                    Kelimeyi Biliyorum
+                </button>
+                <button class="btn btn-danger" id="unknown-btn">
+                    <span class="btn-icon">❌</span>
+                    Kelimeyi Bilmiyorum
                 </button>
             </div>
 

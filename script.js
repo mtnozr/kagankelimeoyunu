@@ -110,20 +110,25 @@ const words = [
 // Oyun durumu
 let currentWordIndex = 0;
 let isFlipped = false;
-let cardsLearned = 0;
+let knownWordsCount = 0;
+let unknownWordsCount = 0;
 
 // DOM elementleri
-const flashcard = document.getElementById('flashcard');
-const germanWord = document.getElementById('german-word');
-const turkishWord = document.getElementById('turkish-word');
-const currentCardSpan = document.getElementById('current-card');
-const totalCardsSpan = document.getElementById('total-cards');
-const prevBtn = document.getElementById('prev-btn');
-const nextBtn = document.getElementById('next-btn');
-const shuffleBtn = document.getElementById('shuffle-btn');
-const progressFill = document.getElementById('progress-fill');
-const confettiContainer = document.getElementById('confetti-container');
-const starsContainer = document.getElementById('stars-container');
+const flashcard = document.getElementById("flashcard");
+const germanWord = document.getElementById("german-word");
+const turkishWord = document.getElementById("turkish-word");
+const currentCardSpan = document.getElementById("current-card");
+const totalCardsSpan = document.getElementById("total-cards");
+const prevBtn = document.getElementById("prev-btn");
+const nextBtn = document.getElementById("next-btn");
+const shuffleBtn = document.getElementById("shuffle-btn");
+const knownBtn = document.getElementById("known-btn");
+const unknownBtn = document.getElementById("unknown-btn");
+const knownCountSpan = document.getElementById("known-count");
+const unknownCountSpan = document.getElementById("unknown-count");
+const progressFill = document.getElementById("progress-fill");
+const confettiContainer = document.getElementById("confetti-container");
+const starsContainer = document.getElementById("stars-container");
 
 // Ses efektleri (Web Audio API kullanarak)
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -170,10 +175,12 @@ function updateCard() {
     turkishWord.textContent = currentWord.turkish;
     currentCardSpan.textContent = currentWordIndex + 1;
     totalCardsSpan.textContent = words.length;
+    knownCountSpan.textContent = knownWordsCount;
+    unknownCountSpan.textContent = unknownWordsCount;
     
     // Progress bar güncelle
     const progress = ((currentWordIndex + 1) / words.length) * 100;
-    progressFill.style.width = progress + '%';
+    progressFill.style.width = progress + "%";
     
     // Buton durumlarını güncelle
     prevBtn.disabled = currentWordIndex === 0;
@@ -181,14 +188,14 @@ function updateCard() {
     
     // Kartı ön yüze çevir
     if (isFlipped) {
-        flashcard.classList.remove('flipped');
+        flashcard.classList.remove("flipped");
         isFlipped = false;
     }
 }
 
 // Kartı çevir
 function flipCard() {
-    flashcard.classList.toggle('flipped');
+    flashcard.classList.toggle("flipped");
     isFlipped = !isFlipped;
     playFlipSound();
     
@@ -232,17 +239,37 @@ function shuffleCards() {
     playSuccessSound();
 }
 
+// Kelimeyi biliyorum
+function markAsKnown() {
+    if (!words[currentWordIndex].known) {
+        words[currentWordIndex].known = true;
+        knownWordsCount++;
+        updateCard();
+        nextCard(); // Sonraki karta geç
+    }
+}
+
+// Kelimeyi bilmiyorum
+function markAsUnknown() {
+    if (!words[currentWordIndex].unknown) {
+        words[currentWordIndex].unknown = true;
+        unknownWordsCount++;
+        updateCard();
+        nextCard(); // Sonraki karta geç
+    }
+}
+
 // Konfeti animasyonu
 function showConfetti() {
-    const colors = ['#ff6b6b', '#feca57', '#48cae4', '#ff9ff3', '#54a0ff'];
+    const colors = ["#ff6b6b", "#feca57", "#48cae4", "#ff9ff3", "#54a0ff"];
     
     for (let i = 0; i < 50; i++) {
         setTimeout(() => {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.left = Math.random() * 100 + '%';
+            const confetti = document.createElement("div");
+            confetti.className = "confetti";
+            confetti.style.left = Math.random() * 100 + "%";
             confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.animationDelay = Math.random() * 2 + 's';
+            confetti.style.animationDelay = Math.random() * 2 + "s";
             confettiContainer.appendChild(confetti);
             
             setTimeout(() => {
@@ -254,15 +281,15 @@ function showConfetti() {
 
 // Yıldız animasyonu
 function showStars() {
-    const starEmojis = ['⭐', '🌟', '✨', '💫'];
+    const starEmojis = ["⭐", "🌟", "✨", "💫"];
     
     for (let i = 0; i < 5; i++) {
         setTimeout(() => {
-            const star = document.createElement('div');
-            star.className = 'star';
+            const star = document.createElement("div");
+            star.className = "star";
             star.textContent = starEmojis[Math.floor(Math.random() * starEmojis.length)];
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
+            star.style.left = Math.random() * 100 + "%";
+            star.style.top = Math.random() * 100 + "%";
             starsContainer.appendChild(star);
             
             setTimeout(() => {
@@ -273,28 +300,38 @@ function showStars() {
 }
 
 // Event listeners
-flashcard.addEventListener('click', flipCard);
-prevBtn.addEventListener('click', previousCard);
-nextBtn.addEventListener('click', nextCard);
-shuffleBtn.addEventListener('click', shuffleCards);
+flashcard.addEventListener("click", flipCard);
+prevBtn.addEventListener("click", previousCard);
+nextBtn.addEventListener("click", nextCard);
+shuffleBtn.addEventListener("click", shuffleCards);
+knownBtn.addEventListener("click", markAsKnown);
+unknownBtn.addEventListener("click", markAsUnknown);
 
 // Klavye kontrolleri
-document.addEventListener('keydown', (e) => {
+document.addEventListener("keydown", (e) => {
     switch(e.key) {
-        case 'ArrowLeft':
+        case "ArrowLeft":
             previousCard();
             break;
-        case 'ArrowRight':
+        case "ArrowRight":
             nextCard();
             break;
-        case ' ':
-        case 'Enter':
+        case " ":
+        case "Enter":
             e.preventDefault();
             flipCard();
             break;
-        case 's':
-        case 'S':
+        case "s":
+        case "S":
             shuffleCards();
+            break;
+        case "k": // 'k' for known
+        case "K":
+            markAsKnown();
+            break;
+        case "u": // 'u' for unknown
+        case "U":
+            markAsUnknown();
             break;
     }
 });
@@ -303,11 +340,11 @@ document.addEventListener('keydown', (e) => {
 let touchStartX = 0;
 let touchEndX = 0;
 
-flashcard.addEventListener('touchstart', (e) => {
+flashcard.addEventListener("touchstart", (e) => {
     touchStartX = e.changedTouches[0].screenX;
 });
 
-flashcard.addEventListener('touchend', (e) => {
+flashcard.addEventListener("touchend", (e) => {
     touchEndX = e.changedTouches[0].screenX;
     handleSwipe();
 });
