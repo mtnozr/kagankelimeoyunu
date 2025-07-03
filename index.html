@@ -1,87 +1,92 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Almanca Kelime Kartları</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kağan'ın Almanca Kart Oyunu</title>
+  <link rel="stylesheet" href="style.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Nunito:wght@400;600;700;800&display=swap"
+    rel="stylesheet"
+  />
 </head>
 <body>
-    <div class="background">
-        <div class="clouds">
-            <div class="cloud cloud1"></div>
-            <div class="cloud cloud2"></div>
-            <div class="cloud cloud3"></div>
-            <div class="cloud cloud4"></div>
-        </div>
+  <div class="background">
+    <div class="clouds">
+      <div class="cloud cloud1"></div>
+      <div class="cloud cloud2"></div>
+      <div class="cloud cloud3"></div>
+      <div class="cloud cloud4"></div>
     </div>
+  </div>
 
-    <div class="container">
-        <header>
-            <h1 class="title">Almanca Kelime Kartları</h1>
-            <div class="counters-container">
-                <div class="card-counter">
-                    <span id="current-card">1</span> / <span id="total-cards">100</span>
-                </div>
-                <div class="counter">
-                    Bilinen: <span id="known-count">0</span>
-                </div>
-                <div class="counter">
-                    Bilinmeyen: <span id="unknown-count">0</span>
-                </div>
+  <div class="container">
+    <header>
+      <h1 class="title">Kağan'ın Almanca Kart Oyunu</h1>
+      <div class="counters-container">
+        <div class="counter known-words">
+          Bilinen Kelimeler: <span id="known-count">0</span>
+        </div>
+        <div class="card-counter">
+          <span id="current-card">1</span> / <span id="total-cards">100</span>
+        </div>
+        <div class="counter unknown-words">
+          Bilinmeyen Kelimeler: <span id="unknown-count">0</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="card-container">
+        <div class="flashcard" id="flashcard">
+          <div class="card-front">
+            <div class="card-content">
+              <div class="language-label">Almanca</div>
+              <div class="word" id="german-word">Hallo</div>
+              <div class="hint">Kartı çevirmek için tıkla! 👆</div>
             </div>
-        </header>
-
-        <div class="progress-bar">
-            <div class="progress-fill" id="progress-fill"></div>
-        </div>
-
-        <div class="card-container">
-            <div class="flashcard" id="flashcard">
-                <div class="card-front">
-                    <div class="card-content">
-                        <div class="language-label">Almanca</div>
-                        <div class="word" id="german-word">Hallo</div>
-                        <div class="hint">Kartı çevirmek için tıkla! 👆</div>
-                    </div>
-                </div>
-                <div class="card-back">
-                    <div class="card-content">
-                        <div class="language-label">Türkçe</div>
-                        <div class="word" id="turkish-word">Merhaba</div>
-                        <div class="hint">Harika! 🎉</div>
-                    </div>
-                </div>
+          </div>
+          <div class="card-back">
+            <div class="card-content">
+              <div class="language-label">Türkçe</div>
+              <div class="word" id="turkish-word">Merhaba</div>
+              <div class="hint">Harika! 🎉</div>
             </div>
+          </div>
         </div>
+      </div>
 
-        <div class="controls">
-            <button class="btn btn-secondary" id="shuffle-btn">
-                <span class="btn-icon">🔀</span>
-                Karıştır
-            </button>
-        </div>
+      <div class="controls">
+        <button class="btn btn-primary" id="shuffle-btn">
+          <span class="btn-icon">🔀</span>
+          Karıştır
+        </button>
+      </div>
 
-        <div class="feedback-buttons">
-            <button class="btn btn-success" id="known-btn" disabled>
-                <span class="btn-icon">✅</span>
-                Kelimeyi Biliyorum
-            </button>
-            <button class="btn btn-danger" id="unknown-btn" disabled>
-                <span class="btn-icon">❌</span>
-                Kelimeyi Bilmiyorum
-            </button>
-        </div>
-    </div>
+      <div class="feedback-buttons">
+        <button class="btn btn-success" id="known-btn" disabled>
+          <span class="btn-icon">✅</span>
+          Kelimeyi Biliyorum
+        </button>
+        <button class="btn btn-danger" id="unknown-btn" disabled>
+          <span class="btn-icon">❌</span>
+          Kelimeyi Bilmiyorum
+        </button>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </main>
 
     <footer>
-        <p>Almanca öğrenmenin keyifli yolu! 🎓</p>
+      <p>Bu site Kağan ÖZER tarafından özel olarak hazırlandı 😊</p>
     </footer>
+  </div>
 
-    <div class="confetti-container" id="confetti-container"></div>
-    <div class="stars-container" id="stars-container"></div>
+  <div class="confetti-container" id="confetti-container"></div>
+  <div class="stars-container" id="stars-container"></div>
 
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
