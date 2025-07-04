@@ -120,8 +120,8 @@ const germanWord = document.getElementById("german-word");
 const turkishWord = document.getElementById("turkish-word");
 const currentCardSpan = document.getElementById("current-card");
 const totalCardsSpan = document.getElementById("total-cards");
-const prevBtn = document.getElementById("prev-btn");
-const nextBtn = document.getElementById("next-btn");
+// const prevBtn = document.getElementById("prev-btn"); // Kaldırıldı
+// const nextBtn = document.getElementById("next-btn"); // Kaldırıldı
 const shuffleBtn = document.getElementById("shuffle-btn");
 const knownBtn = document.getElementById("known-btn");
 const unknownBtn = document.getElementById("unknown-btn");
@@ -184,8 +184,6 @@ function updateCard() {
     progressFill.style.width = progress + "%";
     
     // Buton durumlarını güncelle
-    prevBtn.disabled = currentWordIndex === 0 || !cardAnswered;
-    nextBtn.disabled = currentWordIndex === words.length - 1 || !cardAnswered;
     shuffleBtn.disabled = !cardAnswered; // Shuffle butonu da cevaplanana kadar pasif
     knownBtn.disabled = !isFlipped; // Sadece kart çevriliyse aktif
     unknownBtn.disabled = !isFlipped; // Sadece kart çevriliyse aktif
@@ -204,8 +202,8 @@ function flipCard() {
         flashcard.classList.add("flipped");
         isFlipped = true;
         playFlipSound();
-        knownBtn.disabled = false;
-        unknownBtn.disabled = false;
+        knownBtn.disabled = false; // Kart çevrildiğinde aktif et
+        unknownBtn.disabled = false; // Kart çevrildiğinde aktif et
         setTimeout(() => {
             showStars();
             if (Math.random() < 0.3) { // %30 şansla konfeti göster
@@ -216,30 +214,26 @@ function flipCard() {
     } else { // Zaten çevrilmişse, tekrar tıklayınca ön yüze dönsün
         flashcard.classList.remove("flipped");
         isFlipped = false;
-        knownBtn.disabled = true;
-        unknownBtn.disabled = true;
+        knownBtn.disabled = true; // Kart ön yüze döndüğünde pasif et
+        unknownBtn.disabled = true; // Kart ön yüze döndüğünde pasif et
     }
 }
 
-// Önceki kart
-function previousCard() {
-    if (currentWordIndex > 0 && cardAnswered) {
-        currentWordIndex--;
-        updateCard();
-    }
-}
-
-// Sonraki kart
+// Sonraki kart (sadece biliyorum/bilmiyorum butonları için)
 function nextCard() {
-    if (currentWordIndex < words.length - 1 && cardAnswered) {
+    if (currentWordIndex < words.length - 1) {
         currentWordIndex++;
         updateCard();
+    } else {
+        // Tüm kelimeler bittiğinde ne yapılacağı
+        alert("Tebrikler! Tüm kelimeleri tamamladınız!");
+        // İsterseniz burada oyunu sıfırlayabilir veya başka bir işlem yapabilirsiniz.
     }
 }
 
 // Kartları karıştır
 function shuffleCards() {
-    if (cardAnswered || currentWordIndex === 0) { // İlk kartta veya cevaplanmışsa karıştırmaya izin ver
+    // if (cardAnswered || currentWordIndex === 0) { // İlk kartta veya cevaplanmışsa karıştırmaya izin ver
         for (let i = words.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [words[i], words[j]] = [words[j], words[i]];
@@ -248,7 +242,7 @@ function shuffleCards() {
         updateCard();
         showConfetti();
         playSuccessSound();
-    }
+    // }
 }
 
 // Kelimeyi biliyorum
@@ -260,7 +254,7 @@ function markAsKnown() {
         }
         cardAnswered = true; // Kart cevaplandı
         updateCard();
-        // nextCard(); // Sonraki karta geçişi buradan kaldırıyoruz
+        nextCard(); // Sonraki karta geç
     }
 }
 
@@ -273,7 +267,7 @@ function markAsUnknown() {
         }
         cardAnswered = true; // Kart cevaplandı
         updateCard();
-        // nextCard(); // Sonraki karta geçişi buradan kaldırıyoruz
+        nextCard(); // Sonraki karta geç
     }
 }
 
@@ -319,21 +313,13 @@ function showStars() {
 
 // Event listeners
 flashcard.addEventListener("click", flipCard);
-prevBtn.addEventListener("click", previousCard);
-nextBtn.addEventListener("click", nextCard);
 shuffleBtn.addEventListener("click", shuffleCards);
-knownBtn.addEventListener("click", () => { markAsKnown(); nextCard(); }); // nextCard'ı buraya ekledim
-unknownBtn.addEventListener("click", () => { markAsUnknown(); nextCard(); }); // nextCard'ı buraya ekledim
+knownBtn.addEventListener("click", markAsKnown);
+unknownBtn.addEventListener("click", markAsUnknown);
 
 // Klavye kontrolleri
 document.addEventListener("keydown", (e) => {
     switch(e.key) {
-        case "ArrowLeft":
-            previousCard();
-            break;
-        case "ArrowRight":
-            nextCard();
-            break;
         case " ":
         case "Enter":
             e.preventDefault();
@@ -346,12 +332,10 @@ document.addEventListener("keydown", (e) => {
         case "k": // 'k' for known
         case "K":
             markAsKnown();
-            nextCard(); // Klavye kısayolu ile de sonraki karta geç
             break;
         case "u": // 'u' for unknown
         case "U":
             markAsUnknown();
-            nextCard(); // Klavye kısayolu ile de sonraki karta geç
             break;
     }
 });
@@ -376,10 +360,10 @@ function handleSwipe() {
     if (Math.abs(diff) > swipeThreshold) {
         if (diff > 0) {
             // Sola kaydırma - sonraki kart
-            nextCard();
+            // nextCard(); // Artık otomatik geçiş var
         } else {
             // Sağa kaydırma - önceki kart
-            previousCard();
+            // previousCard(); // Artık otomatik geçiş var
         }
     }
 }
