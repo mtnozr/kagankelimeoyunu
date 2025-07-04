@@ -112,7 +112,6 @@ let currentWordIndex = 0;
 let isFlipped = false;
 let knownWordsCount = 0;
 let unknownWordsCount = 0;
-let cardAnswered = false; // Yeni durum değişkeni
 
 // DOM elementleri
 const flashcard = document.getElementById("flashcard");
@@ -120,8 +119,6 @@ const germanWord = document.getElementById("german-word");
 const turkishWord = document.getElementById("turkish-word");
 const currentCardSpan = document.getElementById("current-card");
 const totalCardsSpan = document.getElementById("total-cards");
-// const prevBtn = document.getElementById("prev-btn"); // Kaldırıldı
-// const nextBtn = document.getElementById("next-btn"); // Kaldırıldı
 const shuffleBtn = document.getElementById("shuffle-btn");
 const knownBtn = document.getElementById("known-btn");
 const unknownBtn = document.getElementById("unknown-btn");
@@ -184,16 +181,13 @@ function updateCard() {
     progressFill.style.width = progress + "%";
     
     // Buton durumlarını güncelle
-    shuffleBtn.disabled = !cardAnswered; // Shuffle butonu da cevaplanana kadar pasif
-    knownBtn.disabled = !isFlipped; // Sadece kart çevriliyse aktif
-    unknownBtn.disabled = !isFlipped; // Sadece kart çevriliyse aktif
+    shuffleBtn.disabled = false; // Shuffle butonu her zaman aktif
+    knownBtn.disabled = true; // Başlangıçta pasif
+    unknownBtn.disabled = true; // Başlangıçta pasif
 
     // Kartı ön yüze çevir
-    if (isFlipped) {
-        flashcard.classList.remove("flipped");
-        isFlipped = false;
-    }
-    cardAnswered = false; // Yeni karta geçildiğinde sıfırla
+    flashcard.classList.remove("flipped");
+    isFlipped = false;
 }
 
 // Kartı çevir
@@ -212,10 +206,7 @@ function flipCard() {
             }
         }, 400);
     } else { // Zaten çevrilmişse, tekrar tıklayınca ön yüze dönsün
-        flashcard.classList.remove("flipped");
-        isFlipped = false;
-        knownBtn.disabled = true; // Kart ön yüze döndüğünde pasif et
-        unknownBtn.disabled = true; // Kart ön yüze döndüğünde pasif et
+        // Bu senaryo artık beklenmiyor, çünkü butonlar otomatik geçiş yapacak
     }
 }
 
@@ -233,16 +224,14 @@ function nextCard() {
 
 // Kartları karıştır
 function shuffleCards() {
-    // if (cardAnswered || currentWordIndex === 0) { // İlk kartta veya cevaplanmışsa karıştırmaya izin ver
-        for (let i = words.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [words[i], words[j]] = [words[j], words[i]];
-        }
-        currentWordIndex = 0;
-        updateCard();
-        showConfetti();
-        playSuccessSound();
-    // }
+    for (let i = words.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [words[i], words[j]] = [words[j], words[i]];
+    }
+    currentWordIndex = 0;
+    updateCard();
+    showConfetti();
+    playSuccessSound();
 }
 
 // Kelimeyi biliyorum
@@ -252,8 +241,7 @@ function markAsKnown() {
             words[currentWordIndex].known = true;
             knownWordsCount++;
         }
-        cardAnswered = true; // Kart cevaplandı
-        updateCard();
+        updateCard(); // Sayaçları güncelle
         nextCard(); // Sonraki karta geç
     }
 }
@@ -265,8 +253,7 @@ function markAsUnknown() {
             words[currentWordIndex].unknown = true;
             unknownWordsCount++;
         }
-        cardAnswered = true; // Kart cevaplandı
-        updateCard();
+        updateCard(); // Sayaçları güncelle
         nextCard(); // Sonraki karta geç
     }
 }
