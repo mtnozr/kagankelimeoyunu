@@ -20,77 +20,6 @@ const words = [
     { german: "acht", turkish: "sekiz" },
     { german: "neun", turkish: "dokuz" },
     { german: "zehn", turkish: "on" },
-    { german: "rot", turkish: "kırmızı" },
-    { german: "grün", turkish: "yeşil" },
-    { german: "blau", turkish: "mavi" },
-    { german: "gelb", turkish: "sarı" },
-    { german: "weiß", turkish: "beyaz" },
-    { german: "schwarz", turkish: "siyah" },
-    { german: "orange", turkish: "turuncu" },
-    { german: "lila", turkish: "mor" },
-    { german: "braun", turkish: "kahverengi" },
-    { german: "grau", turkish: "gri" },
-    { german: "der Hund", turkish: "köpek" },
-    { german: "die Katze", turkish: "kedi" },
-    { german: "der Vogel", turkish: "kuş" },
-    { german: "der Fisch", turkish: "balık" },
-    { german: "das Pferd", turkish: "at" },
-    { german: "die Maus", turkish: "fare" },
-    { german: "der Elefant", turkish: "fil" },
-    { german: "der Löwe", turkish: "aslan" },
-    { german: "der Tiger", turkish: "kaplan" },
-    { german: "der Bär", turkish: "ayı" },
-    { german: "das Essen", turkish: "yemek" },
-    { german: "das Wasser", turkish: "su" },
-    { german: "die Milch", turkish: "süt" },
-    { german: "das Brot", turkish: "ekmek" },
-    { german: "der Apfel", turkish: "elma" },
-    { german: "die Banane", turkish: "muz" },
-    { german: "die Orange", turkish: "portakal" },
-    { german: "die Zitrone", turkish: "limon" },
-    { german: "die Tomate", turkish: "domates" },
-    { german: "die Kartoffel", turkish: "patates" },
-    { german: "die Schule", turkish: "okul" },
-    { german: "der Lehrer", turkish: "öğretmen" },
-    { german: "die Lehrerin", turkish: "kadın öğretmen" },
-    { german: "der Schüler", turkish: "erkek öğrenci" },
-    { german: "die Schülerin", turkish: "kız öğrenci" },
-    { german: "das Buch", turkish: "kitap" },
-    { german: "der Stift", turkish: "kalem" },
-    { german: "das Heft", turkish: "defter" },
-    { german: "die Tasche", turkish: "çanta" },
-    { german: "die Tafel", turkish: "tahta" },
-    { german: "der Kopf", turkish: "kafa" },
-    { german: "das Auge", turkish: "göz" },
-    { german: "die Nase", turkish: "burun" },
-    { german: "der Mund", turkish: "ağız" },
-    { german: "das Ohr", turkish: "kulak" },
-    { german: "die Hand", turkish: "el" },
-    { german: "der Fuß", turkish: "ayak" },
-    { german: "der Bauch", turkish: "karın" },
-    { german: "der Rücken", turkish: "sırt" },
-    { german: "das Bein", turkish: "bacak" },
-    { german: "sehen", turkish: "görmek" },
-    { german: "hören", turkish: "duymak" },
-    { german: "sprechen", turkish: "konuşmak" },
-    { german: "lesen", turkish: "okumak" },
-    { german: "schreiben", turkish: "yazmak" },
-    { german: "gehen", turkish: "gitmek" },
-    { german: "kommen", turkish: "gelmek" },
-    { german: "essen", turkish: "yemek" },
-    { german: "trinken", turkish: "içmek" },
-    { german: "schlafen", turkish: "uyumak" },
-    { german: "groß", turkish: "büyük" },
-    { german: "klein", turkish: "küçük" },
-    { german: "gut", turkish: "iyi" },
-    { german: "schlecht", turkish: "kötü" },
-    { german: "schön", turkish: "güzel" },
-    { german: "hässlich", turkish: "çirkin" },
-    { german: "neu", turkish: "yeni" },
-    { german: "alt", turkish: "eski" },
-    { german: "richtig", turkish: "doğru" },
-    { german: "falsch", turkish: "yanlış" },
-    { german: "die Familie", turkish: "aile" },
     { german: "der Vater", turkish: "baba" },
     { german: "die Mutter", turkish: "anne" },
     { german: "der Sohn", turkish: "oğul" },
@@ -205,8 +134,6 @@ function flipCard() {
                 playSuccessSound();
             }
         }, 400);
-    } else { // Zaten çevrilmişse, tekrar tıklayınca ön yüze dönsün
-        // Bu senaryo artık beklenmiyor, çünkü butonlar otomatik geçiş yapacak
     }
 }
 
@@ -216,7 +143,6 @@ function nextCard() {
         currentWordIndex++;
         updateCard();
     } else {
-        // Tüm kelimeler bittiğinde ne yapılacağı
         alert("Tebrikler! Tüm kelimeleri tamamladınız!");
         // İsterseniz burada oyunu sıfırlayabilir veya başka bir işlem yapabilirsiniz.
     }
@@ -241,8 +167,7 @@ function markAsKnown() {
             words[currentWordIndex].known = true;
             knownWordsCount++;
         }
-        updateCard(); // Sayaçları güncelle
-        nextCard(); // Sonraki karta geç
+        nextCard(); // Sadece bunu çağır
     }
 }
 
@@ -253,8 +178,7 @@ function markAsUnknown() {
             words[currentWordIndex].unknown = true;
             unknownWordsCount++;
         }
-        updateCard(); // Sayaçları güncelle
-        nextCard(); // Sonraki karta geç
+        nextCard(); // Sadece bunu çağır
     }
 }
 
@@ -362,4 +286,3 @@ updateCard();
 setTimeout(() => {
     showStars();
 }, 1000);
-
