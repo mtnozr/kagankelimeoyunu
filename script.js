@@ -1,3 +1,11 @@
+// script.js
+
+// Oyun durumu
+let currentWordIndex = 0;
+let isFlipped = false;
+let knownWordsCount = 0;
+let unknownWordsCount = 0;
+
 // Kelime listesi
 const words = [
     { german: "Hallo", turkish: "Merhaba" },
@@ -12,7 +20,6 @@ const words = [
     { german: "Bitte", turkish: "Rica ederim" },
     { german: "eins", turkish: "bir" },
     { german: "zwei", turkish: "iki" }
-    // ... diğer kelimeler
 ];
 
 // DOM elementleri
@@ -30,39 +37,53 @@ const progressFill = document.getElementById("progress-fill");
 const confettiContainer = document.getElementById("confetti-container");
 const starsContainer = document.getElementById("stars-container");
 
-// Ses efektleri (Web Audio API kullanarak)
+// Ses efektleri
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 // Kartı güncelleyen fonksiyon
 function updateCard() {
-    const { german, turkish } = words[currentIndex];
-    germanWord.textContent = german;
-    turkishWord.textContent = turkish;
-    currentCardSpan.textContent = currentIndex + 1;
+    const currentWord = words[currentWordIndex];
+    germanWord.textContent = currentWord.german;
+    turkishWord.textContent = currentWord.turkish;
+    currentCardSpan.textContent = currentWordIndex + 1;
     totalCardsSpan.textContent = words.length;
-    progressFill.style.width = `${((currentIndex + 1) / words.length) * 100}%`;
-    
-    // Buton durumlarını güncelle - Butonları her zaman aktif tutuyoruz
+    knownCountSpan.textContent = knownWordsCount;
+    unknownCountSpan.textContent = unknownWordsCount;
+
+    // Progress bar
+    const progress = ((currentWordIndex + 1) / words.length) * 100;
+    progressFill.style.width = progress + "%";
+
+    // Buton durumları (shuffle varsa, devre dışı bırakma hatası olmasın)
     if (shuffleBtn) shuffleBtn.disabled = false;
     knownBtn.disabled = false;
     unknownBtn.disabled = false;
 
-    // Kartı ön yüze çevir
+    // Kartı ön yüze getir
     flashcard.classList.remove("flipped");
     isFlipped = false;
 }
 
-// Kartı çevirme fonksiyonu
+// Kart çevirme
 function flipCard() {
     flashcard.classList.toggle("flipped");
     isFlipped = !isFlipped;
     playFlipSound();
 }
 
-// Sonraki karta geçiş
+// Sonraki karta geç
 function nextCard() {
-    currentIndex = (currentIndex + 1) % words.length;
-    updateCard();
+    if (currentWordIndex < words.length - 1) {
+        currentWordIndex++;
+        updateCard();
+    } else {
+        showConfetti();
+        playSuccessSound();
+        setTimeout(() => {
+            alert("Tebrikler! Tüm kelimeleri tamamladınız!");
+            if (shuffleBtn) shuffleCards();
+        }, 500);
+    }
 }
 
 // Kartları karıştır
@@ -71,109 +92,96 @@ function shuffleCards() {
         const j = Math.floor(Math.random() * (i + 1));
         [words[i], words[j]] = [words[j], words[i]];
     }
-    currentIndex = 0;
+    currentWordIndex = 0;
     updateCard();
 }
 
 // Bildiğimizi işaretle
 function markAsKnown() {
-    knownCount++;
-    knownCountSpan.textContent = knownCount;
+    knownWordsCount++;
+    knownCountSpan.textContent = knownWordsCount;
     playSuccessSound();
     setTimeout(nextCard, 300);
 }
 
 // Bilmediğimizi işaretle
 function markAsUnknown() {
-    unknownCount++;
-    unknownCountSpan.textContent = unknownCount;
+    unknownWordsCount++;
+    unknownCountSpan.textContent = unknownWordsCount;
     playErrorSound();
     setTimeout(nextCard, 300);
 }
 
-// Ses oynatma fonksiyonları
+// Ses oynatma
 function playFlipSound() {
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    oscillator.type = 'sine';
-    oscillator.frequency.value = 300;
-    gainNode.gain.value = 0.1;
-    oscillator.start();
-    oscillator.stop(audioContext.currentTime + 0.1);
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+    osc.type = 'sine';
+    osc.frequency.value = 300;
+    gain.gain.value = 0.1;
+    osc.start();
+    osc.stop(audioContext.currentTime + 0.1);
 }
-
 function playSuccessSound() {
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    oscillator.type = 'square';
-    oscillator.frequency.value = 600;
-    gainNode.gain.value = 0.1;
-    oscillator.start();
-    oscillator.stop(audioContext.currentTime + 0.1);
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+    osc.type = 'square';
+    osc.frequency.value = 600;
+    gain.gain.value = 0.1;
+    osc.start();
+    osc.stop(audioContext.currentTime + 0.1);
 }
-
 function playErrorSound() {
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    oscillator.type = 'sawtooth';
-    oscillator.frequency.value = 200;
-    gainNode.gain.value = 0.1;
-    oscillator.start();
-    oscillator.stop(audioContext.currentTime + 0.1);
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+    osc.type = 'sawtooth';
+    osc.frequency.value = 200;
+    gain.gain.value = 0.1;
+    osc.start();
+    osc.stop(audioContext.currentTime + 0.1);
 }
 
-// Öğe dinleyicileri
+// Animasyonlar
+function showConfetti() {
+    // Mevcut konfeti kodunuz
+}
+function showStars() {
+    // Mevcut yıldız animasyonu
+}
+
+// Event listeners
 flashcard.addEventListener("click", flipCard);
-
-// shuffle-btn HTML’de yoksa atla
-if (shuffleBtn) {
-    shuffleBtn.addEventListener("click", shuffleCards);
-}
-
+if (shuffleBtn) shuffleBtn.addEventListener("click", shuffleCards);
 knownBtn.addEventListener("click", markAsKnown);
 unknownBtn.addEventListener("click", markAsUnknown);
 
-// Klavye kontrolleri
+// Klavye
 document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") nextCard();
-    if (e.key === " ") flipCard();
+    if (e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        flipCard();
+    }
 });
 
 // Dokunmatik kaydırma
 let touchStartX = 0;
 const swipeThreshold = 50;
-
-flashcard.addEventListener("touchstart", (e) => {
+flashcard.addEventListener("touchstart", e => {
     touchStartX = e.changedTouches[0].screenX;
 });
-
-flashcard.addEventListener("touchmove", (e) => {
-    e.preventDefault();
+flashcard.addEventListener("touchmove", e => e.preventDefault());
+flashcard.addEventListener("touchend", e => {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (diff > swipeThreshold) nextCard();
 });
 
-flashcard.addEventListener("touchend", (e) => {
-    const touchEndX = e.changedTouches[0].screenX;
-    const diff = touchStartX - touchEndX;
-    if (Math.abs(diff) > swipeThreshold && diff > 0) {
-        nextCard();
-    }
-});
-
-// İlk kartı yükle
+// İlk yükleme
 updateCard();
-
-// Hoş geldin animasyonu
-setTimeout(() => {
-    showStars();
-}, 1000);
-
-// Konfeti ve yıldız animasyonları (mevcut kodunuz)
-function showStars() {
-    // ... Mevcut animasyon kodu
-}
+setTimeout(showStars, 1000);
