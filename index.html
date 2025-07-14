@@ -1,56 +1,40 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kağan'ın Almanca Kart Oyunu</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Almanca Kart Oyunu</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="background">
-        <div class="clouds">
-            <div class="cloud cloud1"></div>
-            <div class="cloud cloud2"></div>
-            <div class="cloud cloud3"></div>
-            <div class="cloud cloud4"></div>
-        </div>
-
-        <div class="game-container">
-            <div class="flashcard" id="flashcard">
-                <div class="front">
-                    <p id="german-word">Hallo</p>
-                </div>
-                <div class="back">
-                    <p id="turkish-word">Merhaba</p>
-                </div>
-            </div>
-
-            <div class="controls">
-                <!-- Eğer eklemek istersen : <button id="shuffle-btn">Karıştır</button> -->
-                <button id="known-btn">Kelimeyi Biliyorum</button>
-                <button id="unknown-btn">Kelimeyi Bilmiyorum</button>
-            </div>
-
-            <div class="progress-bar">
-                <div class="progress" id="progress-fill"></div>
-            </div>
-            <p><span id="current-card">1</span> / <span id="total-cards">12</span></p>
-            <p>Bildiğiniz: <span id="known-count">0</span> | Bilmediğiniz: <span id="unknown-count">0</span></p>
-        </div>
-
-        <footer>
-            <p>Bu site Kağan ÖZER tarafından özel olarak hazırlandı 😊</p>
-        </footer>
+  <div class="background">
+    <div class="clouds">
+      <div class="cloud cloud1"></div>
+      <div class="cloud cloud2"></div>
+      <div class="cloud cloud3"></div>
+      <div class="cloud cloud4"></div>
     </div>
-
-    <!-- Confetti Animation -->
-    <div class="confetti-container" id="confetti-container"></div>
-
-    <!-- Success Stars -->
-    <div class="stars-container" id="stars-container"></div>
-
-    <script src="script.js"></script>
+    <div class="game-container">
+      <div class="flashcard" id="flashcard">
+        <div class="side front"><p id="german-word"></p></div>
+        <div class="side back"><p id="turkish-word"></p></div>
+      </div>
+      <div class="controls">
+        <button id="known-btn">Biliyorum</button>
+        <button id="unknown-btn">Bilmiyorum</button>
+      </div>
+      <div class="progress-bar">
+        <div id="progress-fill"></div>
+      </div>
+      <div class="counters">
+        <span id="current-card"></span> / <span id="total-cards"></span>
+        | B: <span id="known-count"></span>
+        U: <span id="unknown-count"></span>
+      </div>
+    </div>
+    <div id="confetti-container"></div>
+    <div id="stars-container"></div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
