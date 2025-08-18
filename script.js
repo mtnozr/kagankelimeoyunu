@@ -77,8 +77,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Klavye: sağ ok = sonraki, boşluk = çevir
   document.addEventListener("keydown", e => {
-    if (e.key === "ArrowRight") nextCard();
-    if (e.key === " ") flashcard.click();
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      nextCard();
+    }
+    if (e.key === " " || e.code === "Space") {
+      e.preventDefault();
+      flashcard.click();
+    }
   });
 
   // İlk yükleme
