@@ -29,6 +29,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const knownSpan = document.getElementById("known-count");
   const unknownSpan = document.getElementById("unknown-count");
   const progressFill = document.getElementById("progress-fill");
+  const progressKnown = document.getElementById("progress-known");
+  const progressUnknown = document.getElementById("progress-unknown");
+  const knownBadge = document.querySelector(".badge-known");
+  const unknownBadge = document.querySelector(".badge-unknown");
 
   // Başlangıç güncelleme
   function updateCard() {
@@ -40,6 +44,10 @@ document.addEventListener("DOMContentLoaded", function () {
     knownSpan.textContent = knownCount;
     unknownSpan.textContent = unknownCount;
     progressFill.style.width = ((index + 1) / words.length * 100) + "%";
+    if (progressKnown && progressUnknown) {
+      progressKnown.style.width = (knownCount / words.length * 100) + "%";
+      progressUnknown.style.width = (unknownCount / words.length * 100) + "%";
+    }
     if (flipped) {
       flashcard.classList.remove("flipped");
       flipped = false;
@@ -67,11 +75,21 @@ document.addEventListener("DOMContentLoaded", function () {
   // Butonlar
   document.getElementById("known-btn").addEventListener("click", () => {
     knownCount++;
+    if (knownBadge) {
+      knownBadge.classList.remove("bump");
+      void knownBadge.offsetWidth;
+      knownBadge.classList.add("bump");
+    }
     nextCard();
   });
 
   document.getElementById("unknown-btn").addEventListener("click", () => {
     unknownCount++;
+    if (unknownBadge) {
+      unknownBadge.classList.remove("bump");
+      void unknownBadge.offsetWidth;
+      unknownBadge.classList.add("bump");
+    }
     nextCard();
   });
 

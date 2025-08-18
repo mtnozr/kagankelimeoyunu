@@ -26,10 +26,16 @@
       <div class="progress-bar">
         <div id="progress-fill"></div>
       </div>
+      <div class="progress-breakdown">
+        <div id="progress-known"></div>
+        <div id="progress-unknown"></div>
+      </div>
       <div class="counters">
         <span id="current-card"></span> / <span id="total-cards"></span>
-        | B: <span id="known-count"></span>
-        U: <span id="unknown-count"></span>
+        <div class="badges">
+          <span class="badge badge-known">✓ <span id="known-count"></span></span>
+          <span class="badge badge-unknown">✕ <span id="unknown-count"></span></span>
+        </div>
       </div>
     </div>
     <div id="confetti-container"></div>
